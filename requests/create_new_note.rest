@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/notes
+content-type: application/json
+
+{
+    "content": "Nueva nota agregada desde el backend",
+    "important": true
+}
