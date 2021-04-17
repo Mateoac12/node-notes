@@ -1,7 +1,15 @@
+require('dotenv').config()
+require('./mongo')
+
 const express = require('express')
 const { json } = require('express')
+const cors = require('cors')
+
+const Note = require('./models/Note.js')
 
 const app = express()
+
+app.use(cors())
 app.use(json())
 
 // notes
@@ -17,6 +25,12 @@ let notes = [
     content: 'Heyyy segunda nota',
     date: '2021-04-16T17:37:50.261Z',
     important: true
+  },
+  {
+    id: 3,
+    content: 'Esoo tercera nota',
+    date: '2021-04-16T19:37:50.261Z',
+    important: false
   }
 ]
 
@@ -25,7 +39,9 @@ app.get('/', (_, response) => {
 })
 
 app.get('/api/notes', (_, response) => {
-  response.json(notes)
+  Note.find({}).then(notes => {
+    response.json(notes)
+  })
 })
 
 app.get('/api/notes/:id', (request, response) => {
@@ -43,7 +59,7 @@ app.get('/api/notes/:id', (request, response) => {
 app.delete('/api/notes/:id', (request, response) => {
   const { id } = request.params
   notes = notes.filter(note => note.id !== Number(id))
-  response.status(204).end()
+  response.send(notes)
 })
 
 app.post('/api/notes', (request, response) => {
@@ -64,13 +80,13 @@ app.post('/api/notes', (request, response) => {
   response.json(notes)
 })
 
-const PORT = '3000'
-app.listen(PORT, () => {
-  console.log('Servidor listo para usarse')
-})
-
 app.use((_, response) => {
   response.status(404).send({
     error: 'Not page found'
   })
+})
+
+const PORT = '3001'
+app.listen(PORT, () => {
+  console.log('Servidor listo para usarse')
 })
