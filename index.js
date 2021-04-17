@@ -1,8 +1,9 @@
 require('dotenv').config()
 require('./mongo')
 
+const mongoose = require('mongoose')
 const express = require('express')
-const { json } = require('express')
+const { json, response } = require('express')
 const cors = require('cors')
 
 const Note = require('./models/Note.js')
@@ -12,78 +13,77 @@ const app = express()
 app.use(cors())
 app.use(json())
 
-// notes
-let notes = [
-  {
-    id: 1,
-    content: 'Holaa primer mensaje de las notas',
-    date: '2021-04-16T17:34:47.261Z',
-    important: true
-  },
-  {
-    id: 2,
-    content: 'Heyyy segunda nota',
-    date: '2021-04-16T17:37:50.261Z',
-    important: true
-  },
-  {
-    id: 3,
-    content: 'Esoo tercera nota',
-    date: '2021-04-16T19:37:50.261Z',
-    important: false
-  }
-]
-
 app.get('/', (_, response) => {
   response.send('Home de la api')
+  mongoose.connection.close()
 })
 
 app.get('/api/notes', (_, response) => {
   Note.find({}).then(notes => {
     response.json(notes)
+    mongoose.connection.close()
   })
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
   const { id } = request.params
-  const searchSingleResult = notes.find(note => note.id === Number(id))
-  if (typeof searchSingleResult !== 'undefined') {
-    response.send(searchSingleResult)
-  } else {
-    response.send({
-      error: 'not have this note with this ID. Please search with other number'
+  Note.findById(id)
+    .then(note => {
+      response.send(note)
     })
-  }
+    .catch((err) => next(err))
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/notes/:id', (request, response, next) => {
   const { id } = request.params
-  notes = notes.filter(note => note.id !== Number(id))
-  response.send(notes)
+  Note.findByIdAndRemove(id)
+    .then(() => response.status(204).end())
+    .catch(err => next(err))
 })
 
 app.post('/api/notes', (request, response) => {
   const bodyRequest = request.body
-  const allIds = notes.map(({ id }) => id)
-  const lastId = Math.max(...allIds)
 
-  const newNote = {
-    id: lastId + 1,
+  const newNote = new Note({
     content: bodyRequest.content,
-    date: new Date().toISOString(),
+    date: new Date(),
     important: typeof bodyRequest.important !== 'undefined'
       ? bodyRequest.important
       : false
-  }
+  })
 
-  notes = [...notes, newNote]
-  response.json(notes)
+  newNote.save()
+    .then(notes => {
+      response.json(notes)
+      mongoose.connection.close()
+    })
 })
 
-app.use((_, response) => {
-  response.status(404).send({
-    error: 'Not page found'
-  })
+app.put('/api/notes/:id', (request, response) => {
+  const { id } = request.params
+
+  const newNoteUpdated = {
+    content: request.body.content,
+    important: request.body.important
+  }
+
+  Note.findByIdAndUpdate(id, newNoteUpdated, { new: true })
+    .then(res => response.send(res))
+})
+
+app.use((request, response) => {
+  response.status(404).end()
+})
+
+app.use((error, request, repsonse, next) => {
+  const nameError = error.name
+  switch (nameError) {
+    case 'CastError':
+      response.status(400).send({ error: 'Bad request' })
+      break
+    default:
+      response.status(500).send({ error: 'Internet server error' })
+  }
 })
 
 const PORT = '3001'
