@@ -2,6 +2,6 @@ POST http://localhost:3001/api/notes
 content-type: application/json
 
 {
-    "content": "Nueva nota agregada desde el backend",
+    "content": "Nueva nota agregada desde el backend 1",
     "important": true
 }

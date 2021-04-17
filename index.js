@@ -1,12 +1,13 @@
 require('dotenv').config()
 require('./mongo')
 
-const mongoose = require('mongoose')
 const express = require('express')
+const mongoose = require('mongoose')
 const { json, response } = require('express')
 const cors = require('cors')
 
 const Note = require('./models/Note.js')
+const handleErrors = require('./middleware/handleErrors')
 
 const app = express()
 
@@ -15,13 +16,11 @@ app.use(json())
 
 app.get('/', (_, response) => {
   response.send('Home de la api')
-  mongoose.connection.close()
 })
 
 app.get('/api/notes', (_, response) => {
   Note.find({}).then(notes => {
     response.json(notes)
-    mongoose.connection.close()
   })
 })
 
@@ -55,7 +54,6 @@ app.post('/api/notes', (request, response) => {
   newNote.save()
     .then(notes => {
       response.json(notes)
-      mongoose.connection.close()
     })
 })
 
@@ -75,16 +73,7 @@ app.use((request, response) => {
   response.status(404).end()
 })
 
-app.use((error, request, repsonse, next) => {
-  const nameError = error.name
-  switch (nameError) {
-    case 'CastError':
-      response.status(400).send({ error: 'Bad request' })
-      break
-    default:
-      response.status(500).send({ error: 'Internet server error' })
-  }
-})
+app.use(handleErrors)
 
 const PORT = '3001'
 app.listen(PORT, () => {
