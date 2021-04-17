@@ -2,8 +2,7 @@ require('dotenv').config()
 require('./mongo')
 
 const express = require('express')
-const mongoose = require('mongoose')
-const { json, response } = require('express')
+const { json } = require('express')
 const cors = require('cors')
 
 const Note = require('./models/Note.js')
