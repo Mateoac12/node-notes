@@ -4,7 +4,11 @@ const { Schema, model } = mongoose
 const noteShema = new Schema({
   content: String,
   date: Date,
-  important: Boolean
+  important: Boolean,
+  user: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 })
 
 /*

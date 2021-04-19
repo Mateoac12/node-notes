@@ -7,6 +7,8 @@ const cors = require('cors')
 
 const Note = require('./models/Note.js')
 const handleErrors = require('./middleware/handleErrors')
+const usersRouter = require('./controllers/users')
+const notesRouter = require('./controllers/notes')
 
 const app = express()
 
@@ -17,11 +19,7 @@ app.get('/', (_, response) => {
   response.send('Home de la api')
 })
 
-app.get('/api/notes', (_, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
-  })
-})
+app.use('/api/notes', notesRouter)
 
 app.get('/api/notes/:id', (request, response, next) => {
   const { id } = request.params
@@ -67,6 +65,8 @@ app.put('/api/notes/:id', (request, response) => {
   Note.findByIdAndUpdate(id, newNoteUpdated, { new: true })
     .then(res => response.send(res))
 })
+
+app.use('/api/users', usersRouter)
 
 app.use((request, response) => {
   response.status(404).end()
