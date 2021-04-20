@@ -1,6 +1,8 @@
+require('dotenv').config()
 const notesRouter = require('express').Router()
 const Note = require('../models/Note')
 const User = require('../models/User')
+const userExtractor = require('../middleware/userExtractor')
 
 // get all notes
 notesRouter.get('/', async (_, response) => {
@@ -29,9 +31,12 @@ notesRouter.delete('/:id', (request, response, next) => {
 })
 
 // create a new note
-notesRouter.post('/', async (request, response) => {
+notesRouter.post('/', userExtractor, async (request, response) => {
   const { body } = request
-  const { content, important = false, userId } = body
+  const { content, important = false } = body
+
+  // tomo el userId de mi token con el middleware de userExtractor
+  const { userId } = request
 
   const user = await User.findById(userId)
 
