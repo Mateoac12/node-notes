@@ -2,6 +2,7 @@ POST http://localhost:3001/api/notes
 content-type: application/json
 
 {
-    "content": "Creeada desde las request",
-    "important": false
+    "content": "Probando la relacion entre colecciones",
+    "important": false,
+    "userId": "607ef544650d9c3bac9da328"
 }

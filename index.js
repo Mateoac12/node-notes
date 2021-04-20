@@ -1,18 +1,17 @@
-require('dotenv').config()
+require('dotenv').config() // sirve para poder usar variables de entorno
 require('./mongo')
 
 const express = require('express')
 const { json } = require('express')
 const cors = require('cors')
 
-const Note = require('./models/Note.js')
 const handleErrors = require('./middleware/handleErrors')
 const usersRouter = require('./controllers/users')
 const notesRouter = require('./controllers/notes')
 
 const app = express()
 
-app.use(cors())
+app.use(cors()) // sirve para poder acceder a mi dominio desde otro path
 app.use(json())
 
 app.get('/', (_, response) => {

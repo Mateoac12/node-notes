@@ -5,7 +5,7 @@ const noteShema = new Schema({
   content: String,
   date: Date,
   important: Boolean,
-  user: [{
+  userId: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
   }]
