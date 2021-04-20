@@ -20,55 +20,9 @@ app.get('/', (_, response) => {
 })
 
 app.use('/api/notes', notesRouter)
-
-app.get('/api/notes/:id', (request, response, next) => {
-  const { id } = request.params
-  Note.findById(id)
-    .then(note => {
-      response.send(note)
-    })
-    .catch((err) => next(err))
-})
-
-app.delete('/api/notes/:id', (request, response, next) => {
-  const { id } = request.params
-  Note.findByIdAndRemove(id)
-    .then(() => response.status(204).end())
-    .catch(err => next(err))
-})
-
-app.post('/api/notes', (request, response) => {
-  const bodyRequest = request.body
-
-  const newNote = new Note({
-    content: bodyRequest.content,
-    date: new Date(),
-    important: typeof bodyRequest.important !== 'undefined'
-      ? bodyRequest.important
-      : false
-  })
-
-  newNote.save()
-    .then(notes => {
-      response.json(notes)
-    })
-})
-
-app.put('/api/notes/:id', (request, response) => {
-  const { id } = request.params
-
-  const newNoteUpdated = {
-    content: request.body.content,
-    important: request.body.important
-  }
-
-  Note.findByIdAndUpdate(id, newNoteUpdated, { new: true })
-    .then(res => response.send(res))
-})
-
 app.use('/api/users', usersRouter)
 
-app.use((request, response) => {
+app.use((_, response) => {
   response.status(404).end()
 })
 

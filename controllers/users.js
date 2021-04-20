@@ -21,4 +21,10 @@ usersRouter.post('/', async (request, response) => {
     })
 })
 
+usersRouter.get('/', (request, response) => {
+  User.find({}).then(users => {
+    response.json(users)
+  })
+})
+
 module.exports = usersRouter
