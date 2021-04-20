@@ -8,6 +8,7 @@ const cors = require('cors')
 const handleErrors = require('./middleware/handleErrors')
 const usersRouter = require('./controllers/users')
 const notesRouter = require('./controllers/notes')
+const loginRouter = require('./controllers/login')
 
 const app = express()
 
@@ -20,6 +21,7 @@ app.get('/', (_, response) => {
 
 app.use('/api/notes', notesRouter)
 app.use('/api/users', usersRouter)
+app.use('/login', loginRouter)
 
 app.use((_, response) => {
   response.status(404).end()
