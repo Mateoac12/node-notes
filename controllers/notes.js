@@ -5,15 +5,17 @@ const User = require('../models/User')
 const userExtractor = require('../middleware/userExtractor')
 
 // get all notes
-notesRouter.get('/', async (_, response) => {
-  await Note.find({})
+notesRouter.get('/', userExtractor, async (request, response) => {
+  const { userId } = request
+
+  await Note.find({ userId })
     .then(notes => {
       response.json(notes)
     })
 })
 
 // get single note
-notesRouter.get('/:id', (request, response, next) => {
+notesRouter.get('/:id', userExtractor, (request, response, next) => {
   const { id } = request.params
   Note.findById(id)
     .then(note => {
@@ -23,7 +25,7 @@ notesRouter.get('/:id', (request, response, next) => {
 })
 
 // remove single note
-notesRouter.delete('/:id', (request, response, next) => {
+notesRouter.delete('/:id', userExtractor, (request, response, next) => {
   const { id } = request.params
   Note.findByIdAndRemove(id)
     .then(() => response.status(204).end())
@@ -57,7 +59,7 @@ notesRouter.post('/', userExtractor, async (request, response) => {
 })
 
 // update single note
-notesRouter.put('/:id', (request, response) => {
+notesRouter.put('/:id', userExtractor, (request, response) => {
   const { id } = request.params
 
   const newNoteUpdated = {

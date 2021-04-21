@@ -1,8 +1,8 @@
 POST http://localhost:3001/api/notes
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwN2VmNTQ0NjUwZDljM2JhYzlkYTMyOCIsInVzZXJuYW1lIjoibWFkZXZhbCIsImlhdCI6MTYxODk0MzMyMn0.bL8WTxaTl5r4A9f04mEXlIJdPSSn46qcNNw0KcKl11U
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwODA4OTA4NzEyMmI5MzRhMGMzODI4YiIsInVzZXJuYW1lIjoibWFkZXZhbFRlc3RpbmciLCJpYXQiOjE2MTkwMzY1NjIsImV4cCI6MTYxOTY0MTM2Mn0.wCBvnSnyezDrabF1JezFXTuZnTRfUkjzNJmfg1nl9x0
 
 {
-    "content": "Probando la relacion entre colecciones",
+    "content": "Una prueba mas del test de madeval",
     "important": false
 }

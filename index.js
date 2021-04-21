@@ -2,8 +2,8 @@ require('dotenv').config() // sirve para poder usar variables de entorno
 require('./mongo')
 
 const express = require('express')
-const { json } = require('express')
 const cors = require('cors')
+const { json } = require('express')
 
 const handleErrors = require('./middleware/handleErrors')
 const usersRouter = require('./controllers/users')
