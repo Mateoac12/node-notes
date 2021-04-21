@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/notes/607b4630dd95124e4cad99d1
+content-type: application/json
+
+{
+    "content": "Nota actualizada desde .rest",
+    "important": false
+}
